@@ -16,62 +16,87 @@ void desenhatabuleiro(char tabuleiro[][3]) {
                 printf("---+---+---\n");
             }
         }
-    
         printf("\n");
     }
-        
 
 char jogar(char tabuleiro[][3], int posicao, char jogadorAtual) {
    int linha = (posicao - 1) / 3;
    int coluna = (posicao - 1) % 3;
-
+   if (tabuleiro[linha][coluna] !='X' && tabuleiro[linha][coluna] !='O' ){
    tabuleiro[linha][coluna] = jogadorAtual;
+    return 1;
+    }
+    return 0;
+}
 
+char vitoria(char tabuleiro[][3]){
+for (int i = 0; i < 3; i++){
+if (tabuleiro[i][0] == tabuleiro[i][1] && tabuleiro[i][1] == tabuleiro[i][2]){
+return 1;
+}
+}
+
+for (int i = 0; i < 3; i++){
+    if (tabuleiro[0][i] == tabuleiro[1][i] && tabuleiro[1][i] == tabuleiro[2][i]){
+        return 1;
+    }
+}
+
+if (tabuleiro[0][0] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][2]){
     return 1;
 }
 
+if(tabuleiro[0][2] == tabuleiro[1][1] && tabuleiro[1][1] == tabuleiro[2][0]){
+    return 1;
+}
+return 0;
+
+}
 
 int main(int argc, char *argv[]){
-    char tabuleiro[3][3] ={
-        '1','2','3',
-        '4','5','6',
-        '7','8','9'
-    };
+char tabuleiro[3][3] ={
+'1','2','3',
+'4','5','6',
+'7','8','9'
+};
 
-    int jogada = 0;
-    int posicao = 'B';
+int jogada = 0;
+int posicao = 'B';
 
-    while (jogada < 9){
-        desenhatabuleiro(tabuleiro);
+while (jogada < 9){
+    desenhatabuleiro(tabuleiro);
 
-        printf("jogador %c, escolha uma posicao (1-9): ", (jogada % 2 == 0) ? 'X' : '0'); 
-        scanf("%d", &posicao);
+    printf("jogador %c, escolha uma posicao (1-9): ", (jogada % 2 == 0) ? 'X' : 'O');
+    scanf("%d", &posicao);
 
-        if (posicao < 1 || posicao > 9) {
-            printf("Posicao invalida! Escolha um numero entre 1 e 9.\n");
-            printf("Pressione Enter para continunar ...");
-            getchar();
-            getchar();
-            continue;
-        }
-
-        char jogadorAtual = (jogada % 2==0) ? 'X' : '0';
-        if (!jogar(tabuleiro, posicao, jogadorAtual)) {
-            printf("Posicao ja ocupada! Tente novamente.\n");
-            printf("Pressione Enter para continunar ...");
-            getchar();
-            getchar();
-            continue;
-        }
-
-        jogada++;
+    if (posicao < 1 || posicao > 9) {
+        printf("Posicao invalida! Escolha um numero entre 1 e 9.\n");
+        printf("Pressione Enter para continunar ...");
+        getchar();
+        getchar();
+        continue;
     }
 
-    return 0;
-} 
+    char jogadorAtual = (jogada % 2==0) ? 'X' : 'O';
+    if (!jogar(tabuleiro, posicao, jogadorAtual)) {
+        printf("Posicao ja ocupada! Tente novamente.\n");
+        printf("Pressione Enter para continunar ...");
+        getchar();
+        getchar();
+        continue;
+    }
 
-    /*int linha = (posicao - 1) / 3; 
-    int coluna = (posicao - 1) %3;
+    if (vitoria(tabuleiro)) {
+        desenhatabuleiro(tabuleiro);
+        printf("Vitoria do jogador %c ! \n", jogadorAtual);
+        break;
 
-    tabuleiro[linha][coluna] = jogadorAtual;
-    return 1;*\
+    }
+    jogada++;
+}
+
+printf("Fim do jogo! Pressione Enter para sair...\n");
+getchar();
+getchar();
+return 0;
+}
